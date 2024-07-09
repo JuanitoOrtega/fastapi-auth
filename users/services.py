@@ -6,6 +6,7 @@ from datetime import datetime
 
 async def create_user_account(data, db):
     user = db.query(UserModel).filter(UserModel.email == data.email).first()
+    
     if user:
         raise HTTPException(status_code=422, detail="Email is already registered with us.")
 
@@ -19,6 +20,7 @@ async def create_user_account(data, db):
         registered_at=datetime.now(),
         updated_at=datetime.now()
     )
+    
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
