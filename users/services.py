@@ -25,3 +25,8 @@ async def create_user_account(data, db):
     db.commit()
     db.refresh(new_user)
     return new_user
+
+
+async def get_all_users(db):
+    users = db.query(UserModel).all()
+    return users

@@ -3,9 +3,10 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from core.database import get_db
 from users.schemas import CreateUserRequest
-from users.services import create_user_account
+from users.services import create_user_account, get_all_users
 from core.security import oauth2_scheme
-from users.responses import UserResponse;
+from users.responses import UserResponse, UsersResponse
+from typing import List
 
 
 router = APIRouter(
@@ -31,3 +32,9 @@ async def create_user(data: CreateUserRequest, db: Session = Depends(get_db)):
 @user_router.post('/me', status_code=status.HTTP_200_OK, response_model=UserResponse)
 def get_user_detail(request: Request):
     return request.user
+
+
+@router.get('/all', response_model=List[UsersResponse], status_code=status.HTTP_200_OK)
+async def get_users(db: Session = Depends(get_db)):
+    users = await get_all_users(db)
+    return users
